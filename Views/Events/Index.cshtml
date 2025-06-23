@@ -1,0 +1,113 @@
+﻿@model IEnumerable<EventEase2.Models.Event>
+
+
+@{
+    ViewData["Title"] = "Events";
+
+}
+
+
+<h1>Index</h1>
+
+<form method="get" class="mb-4">
+    <div class="row">
+        <!-- Event Type Filter -->
+        <div class="col-md-3">
+            <label>Event Type</label>
+            <select name="searchType" class="form-control">
+                <option value="">-- All Types --</option>
+                @foreach (var type in ViewData["EventType"] as IEnumerable<EventEase2.Models.EventType>)
+                {
+                    <option value="@type.Name">@type.Name</option>
+                }
+            </select>
+        </div>
+
+        <!-- Venue Filter -->
+        <div class="col-md-3">
+            <label>Venue</label>
+            <select name="venueId" class="form-control">
+                <option value="">-- All Venues --</option>
+                @foreach (var venue in ViewData["Venue"] as IEnumerable<EventEase2.Models.Venue>)
+                {
+                    <option value="@venue.VenueId">@venue.VenueName</option>
+                }
+            </select>
+        </div>
+
+        <!-- Start Date -->
+        <div class="col-md-3">
+            <label>Start Date</label>
+            <input type="date" name="startDate" class="form-control" name="startDate" />
+        </div>
+
+        <!-- End Date -->
+        <div class="col-md-3">
+            <label>End Date</label>
+            <input type="date" name="endDate" class="form-control" name="endDate" />
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="/Events/Index" class="btn btn-secondary ml-2">Clear</a>
+    </div>
+</form>
+
+
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h2>Events</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary mb-3">Create New</a>
+</p>
+
+<table class="table table-bordered table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>EventID</th>
+            <th>EventName</th>
+            <th>EventDate</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EventId</td>
+                <td>@item.EventName</td>
+                <td>@item.EventDate</td>
+                <td>@item.Venue?.VenueName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
